@@ -47,7 +47,7 @@ for student in range(57,634):
         # เช็คว่ามีรหัสไหม
         if found_pass == 0: # ไม่มีรหัส
             # สุ่มหารหัส
-            start_date = date(2547, 12, 20)
+            start_date = date(2546, 1, 1)
             end_date = date(2547, 12, 31)
             delta = timedelta(days=1)
             while start_date <= end_date:
